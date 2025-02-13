@@ -36,11 +36,8 @@ class MainActivity : ComponentActivity() {
         setContent {
             RaynaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Mahfoudh",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                    //FirstUI(modifier = Modifier.padding(innerPadding))
+
+                    FirstUI(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -48,7 +45,7 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting (name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
         modifier = modifier
@@ -61,7 +58,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
  */
 @Composable
 fun FirstUI(modifier: Modifier = Modifier) {
-    // TODO 1: Create state variables for text input and items list
+
+    var textInput by remember { mutableStateOf("") }
+    val itemsList = remember { mutableStateListOf<String>() }
 
     Column(
         modifier = modifier
@@ -69,14 +68,23 @@ fun FirstUI(modifier: Modifier = Modifier) {
             .fillMaxSize()
     ) {
         SearchInputBar(
-            textValue = "", // TODO 2: Connect to state
-            onTextValueChange = { /* TODO 3: Update text state */ },
-            onAddItem = { /* TODO 4: Add item to list */ },
-            onSearch = { /* TODO 5: Implement search functionality */ }
+            textValue = textInput,
+            onTextValueChange = { textInput = it },
+            onAddItem = {
+                if (it.isNotBlank()) {
+                    itemsList.add(it)
+                    textInput = ""
+                }
+            },
+            onSearch = { searchQuery ->
+                val filteredItems = itemsList.filter { it.contains(searchQuery, ignoreCase = true) }
+                // Update the displayed items based on the search result
+                itemsList.clear()
+                itemsList.addAll(filteredItems)
+            }
         )
 
-        // TODO 6: Display list of items using CardsList composable
-        CardsList(emptyList())
+        CardsList(itemsList)
     }
 }
 
@@ -108,11 +116,11 @@ fun SearchInputBar(
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = { /* TODO 7: Handle add button click */ }) {
+            Button(onClick = { onAddItem(textValue) }) {
                 Text("Add")
             }
 
-            Button(onClick = { /* TODO 8: Handle search button click */ }) {
+            Button(onClick = { onSearch(textValue) }) {
                 Text("Search")
             }
         }
@@ -125,9 +133,7 @@ fun SearchInputBar(
  */
 @Composable
 fun CardsList(displayedItems: List<String>) {
-    // TODO 9: Implement LazyColumn to display items
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        // TODO 10: Create cards for each item in the list
         items(displayedItems) { item ->
             Card(
                 modifier = Modifier
@@ -135,8 +141,16 @@ fun CardsList(displayedItems: List<String>) {
                     .padding(vertical = 4.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Text(text = "Sample Item", modifier = Modifier.padding(16.dp))
+                Text(text = item, modifier = Modifier.padding(16.dp))
             }
         }
+    }
+}
+
+@Preview
+@Composable
+fun PreviewFirstUI() {
+    RaynaTheme {
+        FirstUI()
     }
 }
