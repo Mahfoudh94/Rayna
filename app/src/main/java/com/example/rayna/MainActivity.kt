@@ -1,142 +1,192 @@
 package com.example.rayna
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rayna.ui.theme.RaynaTheme
+import com.example.rayna.view.MainScreen
+import com.example.rayna.viewmodel.LocationViewModel
+import com.example.rayna.viewmodel.ProductViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
-            RaynaTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Mahfoudh",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                    //FirstUI(modifier = Modifier.padding(innerPadding))
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                RaynaTheme  {
+                    Surface(
+                        modifier = Modifier.fillMaxSize(),
+                        color = MaterialTheme.colorScheme.background
+                    ) {
+
+                        Greeting()
+                    }
                 }
             }
+
         }
     }
 }
 
+
+
+
+
+
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-/**
- * Main composable function for the UI layout
- * @param modifier Modifier for layout adjustments
- */
-@Composable
-fun FirstUI(modifier: Modifier = Modifier) {
-    // TODO 1: Create state variables for text input and items list
-
-    Column(
-        modifier = modifier
-            .padding(25.dp)
-            .fillMaxSize()
-    ) {
-        SearchInputBar(
-            textValue = "", // TODO 2: Connect to state
-            onTextValueChange = { /* TODO 3: Update text state */ },
-            onAddItem = { /* TODO 4: Add item to list */ },
-            onSearch = { /* TODO 5: Implement search functionality */ }
-        )
-
-        // TODO 6: Display list of items using CardsList composable
-        CardsList(emptyList())
+fun Greeting() {
+    var buttomState by remember {
+        mutableStateOf( "Home")
     }
-}
+    val productViewModel = viewModel<ProductViewModel>()
+    val locationViewModel = viewModel<LocationViewModel>()
 
-/**
- * Composable for search and input controls
- * @param textValue Current value of the input field
- * @param onTextValueChange Callback for text changes
- * @param onAddItem Callback for adding new items
- * @param onSearch Callback for performing search
- */
-@Composable
-fun SearchInputBar(
-    textValue: String,
-    onTextValueChange: (String) -> Unit,
-    onAddItem: (String) -> Unit,
-    onSearch: (String) -> Unit
-) {
-    Column {
-        TextField(
-            value = textValue,
-            onValueChange = onTextValueChange,
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Enter text...") }
-        )
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Button(onClick = { /* TODO 7: Handle add button click */ }) {
-                Text("Add")
+
+    Scaffold(
+
+
+
+
+
+
+        content = {
+
+
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                when (buttomState) {
+                    "Home" -> MainScreen(
+                        productViewModel,
+                        locationViewModel,
+
+                        )
+                    "Account" -> Text(text = "Account", fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                    "Map" -> Text(text = "Map", fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                    "Search" -> Text(text = "Search", fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                    "Community" -> Text(text = "Community", fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                    else -> Text(text = "Unknown", fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                }
             }
+        },
 
-            Button(onClick = { /* TODO 8: Handle search button click */ }) {
-                Text("Search")
-            }
-        }
-    }
-}
-
-/**
- * Composable for displaying a list of items in cards
- * @param displayedItems List of items to display
- */
-@Composable
-fun CardsList(displayedItems: List<String>) {
-    // TODO 9: Implement LazyColumn to display items
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        // TODO 10: Create cards for each item in the list
-        items(displayedItems) { item ->
-            Card(
+        bottomBar = {
+            Surface(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Text(text = "Sample Item", modifier = Modifier.padding(16.dp))
+                    .shadow(8.dp, RoundedCornerShape(0.dp))
+                    .clip(RoundedCornerShape(topStart =20 .dp, topEnd = 20.dp))
+                ,
+                color = Color.Gray
+            ){
+                NavigationBar (
+                    containerColor = Color(0xFFE91E63),
+
+                    ){
+
+                    NavigationBarItem(
+                        selected = buttomState == "Home",
+                        onClick = { buttomState = "Home" },
+                        label = { Text(text = "Home", color = Color.White)  },
+                        icon = { Icon(imageVector = Icons.Default.Home , contentDescription = null , tint = if (buttomState == "Home") Color.Black else Color.White,) }
+
+                    )
+                    NavigationBarItem(
+                        selected = buttomState == "Map",
+                        onClick = { buttomState = "Map"  },
+                        label = { Text(text = "Map",color = Color.White) },
+                        icon = { Icon(imageVector = Icons.Default.LocationOn , contentDescription = null,  tint = if (buttomState == "Map") Color.Black else Color.White,) }
+
+                    )
+                    NavigationBarItem(
+                        selected = buttomState == "Search",
+                        onClick = { },
+                        icon = {     Box(
+                            modifier = Modifier
+                                .size(70.dp)
+                                .clip(CircleShape)
+                                .background(Color.White) ,
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Image(
+                                painter = painterResource(id = R.drawable.c),
+                                contentDescription = "Custom Icon",
+                                modifier = Modifier.size(50.dp)
+                            )
+                        }}
+
+
+                    )
+                    NavigationBarItem(
+                        selected = buttomState == "Community",
+                        onClick = {  buttomState = "Community" },
+                        label = { Text(text = "Community", maxLines = 1,color = Color.White) },
+                        icon = {
+                            Image(
+                                painter = painterResource(id = R.drawable.a),
+                                contentDescription = "Custom Icon",
+                                modifier = Modifier.size(30.dp),
+                                colorFilter = ColorFilter.tint(if (buttomState == "Community") Color.Black else Color.White,)
+                            )
+                        }
+
+                    )
+                    NavigationBarItem(
+                        selected = buttomState == "Account",
+                        onClick = {buttomState = "Account"   },
+                        label = { Text(text = "Account",color = Color.White) },
+                        icon = { Icon(imageVector = Icons.Default.AccountCircle , contentDescription = null, tint  = if (buttomState == "Account") Color.Black else Color.White,) }
+
+                    )
+
+
+                }
             }
+
+
         }
-    }
+    )
+
 }
+
