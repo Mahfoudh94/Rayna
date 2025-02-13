@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,6 +26,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.rayna.ui.theme.RaynaTheme
@@ -36,24 +38,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             RaynaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Mahfoudh",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                    //FirstUI(modifier = Modifier.padding(innerPadding))
+
+                    FirstUI(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+
 
 /**
  * Main composable function for the UI layout
@@ -62,6 +55,10 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Composable
 fun FirstUI(modifier: Modifier = Modifier) {
     // TODO 1: Create state variables for text input and items list
+    var textValue by remember { mutableStateOf("") }
+    val itemsList = remember { mutableStateListOf<String>() }
+    var displayedItems by remember { mutableStateOf(itemsList.toList()) }
+
 
     Column(
         modifier = modifier
@@ -69,14 +66,18 @@ fun FirstUI(modifier: Modifier = Modifier) {
             .fillMaxSize()
     ) {
         SearchInputBar(
-            textValue = "", // TODO 2: Connect to state
-            onTextValueChange = { /* TODO 3: Update text state */ },
-            onAddItem = { /* TODO 4: Add item to list */ },
-            onSearch = { /* TODO 5: Implement search functionality */ }
+            textValue = textValue, // TODO 2: Connect to state
+            onTextValueChange = { textValue =it /* TODO 3: Update text state */ },
+            onAddItem = {  if (it.isNotBlank()) {
+                itemsList.add(it)
+                displayedItems = itemsList.toList()
+            }/* TODO 4: Add item to list */ },
+            onSearch = {   displayedItems = if (it.isBlank()) itemsList.toList()
+            else itemsList.filter { item -> item.contains(it, ignoreCase = true) }/* TODO 5: Implement search functionality */ }
         )
 
         // TODO 6: Display list of items using CardsList composable
-        CardsList(emptyList())
+        CardsList(displayedItems)
     }
 }
 
@@ -108,11 +109,11 @@ fun SearchInputBar(
                 .padding(vertical = 8.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = { /* TODO 7: Handle add button click */ }) {
+            Button(onClick = { onAddItem(textValue); /* TODO 7: Handle add button click */ }) {
                 Text("Add")
             }
 
-            Button(onClick = { /* TODO 8: Handle search button click */ }) {
+            Button(onClick = {onSearch(textValue) /* TODO 8: Handle search button click */ }) {
                 Text("Search")
             }
         }
@@ -135,7 +136,7 @@ fun CardsList(displayedItems: List<String>) {
                     .padding(vertical = 4.dp),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
             ) {
-                Text(text = "Sample Item", modifier = Modifier.padding(16.dp))
+                Text(text = item, modifier = Modifier.padding(16.dp))
             }
         }
     }
