@@ -37,7 +37,7 @@ class MainActivity : ComponentActivity() {
             RaynaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Mahfoudhb",
+                        name = "MahfoudhTT",
                         modifier = Modifier.padding(innerPadding)
                     )
                     //FirstUI(modifier = Modifier.padding(innerPadding))
