@@ -57,7 +57,7 @@ fun FirstUI(modifier: Modifier = Modifier) {
             onTextValueChange = { textValue = it /* TODO 3: Update text state */ }, // يحدث النص تاع المستخدم
             onAddItem = { /* TODO 4: Add item to list */
                 if (textValue.isNotBlank()) {
-                    allItems.add(textValue) // يضيف عنصر للقائمة
+                    allItems.add(textValue) // يضيف عنصرإلى القائمة
                     textValue = "" // يمسح الحقل بعد الإضافة
                 }
             },
