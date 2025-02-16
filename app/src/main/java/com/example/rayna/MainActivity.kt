@@ -91,7 +91,7 @@ fun SearchInputBar(
     onSearch: (String) -> Unit
 ) {
     Column {
-        // حقل النص لي يستعملوه في البحث و الإضافة
+        // حقل النصص يستعملوه في البحث و الإضافة
         TextField(
             value = textValue,
             onValueChange = {
@@ -102,7 +102,7 @@ fun SearchInputBar(
             placeholder = { Text("Enter Text") }
         )
 
-        // أزرار الإضافة و البحث
+        // أزرار الإضافة والبحث
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -129,7 +129,7 @@ fun SearchInputBar(
 @Composable
 fun CardsList(displayedItems: List<String>, onDeleteItem: (String) -> Unit) {
     // TODO 9: Implement LazyColumn to display items
-    // قائمة تاع العناصر لي تقدر تديرلها Scroll بسهولة
+    // قائمة العناصر لي تقدر تديرلها Scroll بسهولة
     LazyColumn(modifier = Modifier.fillMaxSize()) {
         // TODO 10: Create cards for each item in the list
         // بطاقة تعرض العنصر مع زر الحذف
