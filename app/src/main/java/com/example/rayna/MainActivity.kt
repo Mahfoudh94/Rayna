@@ -4,26 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -32,15 +19,11 @@ import com.example.rayna.ui.theme.RaynaTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        enableEdgeToEdge() // تفعيل وضع Edge-to-Edge
         setContent {
             RaynaTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Mahfoudh",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                    //FirstUI(modifier = Modifier.padding(innerPadding))
+                    MainUI(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -48,95 +31,92 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun MainUI(modifier: Modifier = Modifier) {
+    // متغير لتخزين النص المُدخل
+    var textValue by remember { mutableStateOf("") }
 
-/**
- * Main composable function for the UI layout
- * @param modifier Modifier for layout adjustments
- */
-@Composable
-fun FirstUI(modifier: Modifier = Modifier) {
-    // TODO 1: Create state variables for text input and items list
+    // قائمة العناصر القابلة للتعديل
+    val itemList = remember { mutableStateListOf<String>() }
+
+    // قائمة مفلترة حسب النص المُدخل
+    var filteredList by remember { mutableStateOf<List<String>>(itemList.toList()) }
+
+    // تحديث القائمة المفلترة عند تغيير النص أو القائمة الأصلية
+    LaunchedEffect(textValue, itemList) {
+        filteredList = if (textValue.isEmpty()) {
+            itemList.toList() // تحويل القائمة إلى List عادية
+        } else {
+            itemList.filter { it.contains(textValue, ignoreCase = true) }
+        }
+    }
 
     Column(
         modifier = modifier
-            .padding(25.dp)
+            .padding(16.dp)
             .fillMaxSize()
     ) {
-        SearchInputBar(
-            textValue = "", // TODO 2: Connect to state
-            onTextValueChange = { /* TODO 3: Update text state */ },
-            onAddItem = { /* TODO 4: Add item to list */ },
-            onSearch = { /* TODO 5: Implement search functionality */ }
+        // حقل الإدخال للبحث أو إضافة عنصر جديد
+        TextField(
+            value = textValue,
+            onValueChange = { textValue = it },
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text("ابحث أو أضف عنصرًا") }
         )
 
-        // TODO 6: Display list of items using CardsList composable
-        CardsList(emptyList())
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // زر إضافة عنصر إلى القائمة
+        Button(
+            onClick = {
+                if (textValue.isNotEmpty()) {
+                    itemList.add(textValue)
+                    textValue = "" // إعادة تعيين الحقل بعد الإضافة
+                }
+            },
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text("add")
+        }
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        // عرض القائمة المفلترة
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(filteredList) { item ->
+                ItemCard(item, onDelete = {
+                    itemList.remove(item) // حذف العنصر عند النقر على زر الحذف
+                })
+            }
+        }
     }
 }
 
-/**
- * Composable for search and input controls
- * @param textValue Current value of the input field
- * @param onTextValueChange Callback for text changes
- * @param onAddItem Callback for adding new items
- * @param onSearch Callback for performing search
- */
 @Composable
-fun SearchInputBar(
-    textValue: String,
-    onTextValueChange: (String) -> Unit,
-    onAddItem: (String) -> Unit,
-    onSearch: (String) -> Unit
-) {
-    Column {
-        TextField(
-            value = textValue,
-            onValueChange = onTextValueChange,
-            modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text("Enter text...") }
-        )
-
+fun ItemCard(item: String, onDelete: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(onClick = { /* TODO 7: Handle add button click */ }) {
-                Text("Add")
-            }
-
-            Button(onClick = { /* TODO 8: Handle search button click */ }) {
-                Text("Search")
+            Text(text = item)
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Default.Delete, contentDescription = "حذف")
             }
         }
     }
 }
 
-/**
- * Composable for displaying a list of items in cards
- * @param displayedItems List of items to display
- */
+@Preview(showBackground = true)
 @Composable
-fun CardsList(displayedItems: List<String>) {
-    // TODO 9: Implement LazyColumn to display items
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        // TODO 10: Create cards for each item in the list
-        items(displayedItems) { item ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 4.dp),
-                elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
-            ) {
-                Text(text = "Sample Item", modifier = Modifier.padding(16.dp))
-            }
-        }
+fun PreviewMainUI() {
+    RaynaTheme {
+        MainUI()
     }
 }
