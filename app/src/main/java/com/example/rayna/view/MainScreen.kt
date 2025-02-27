@@ -179,7 +179,7 @@ fun ProductCard(product: Product) {
         }
     }
 }
-
+//test
 @Composable
 fun LocationCard(location: Location) {
     Card(modifier = Modifier.fillMaxWidth().padding(8.dp).background(Color(0xFF90EE90))) {
