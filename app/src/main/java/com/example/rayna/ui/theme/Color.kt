@@ -3,12 +3,12 @@ package com.example.rayna.ui.theme
 import androidx.compose.ui.graphics.Color
 
 // New Modern Color Scheme
-val RoyalAmethyst = Color(0xFF6C5CE7)     // Primary Purple (Trust/Creativity)
+val RoyalAmethyst = Color(0xFF1D940F)     // Primary Purple (Trust/Creativity)
 val CoralBlush = Color(0xFFFF6B6B)        // Secondary Coral (Energy/Attention)
 val OceanTeal = Color(0xFF2D9B9B)         // Tertiary Teal (Balance/Technology)
 
 // Dark Theme Variants
-val DeepLavender = Color(0xFF5A4DCC)      // Dark Primary
+val DeepLavender = Color(0xFF065D03)      // Dark Primary
 val SunsetCoral = Color(0xFFE55A5A)       // Dark Secondary
 val AbyssalTeal = Color(0xFF247B7B)       // Dark Tertiary
 
