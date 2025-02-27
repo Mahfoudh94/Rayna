@@ -39,10 +39,26 @@ object ProductRepository {
             description = "The ultimate iPad experience with M2 chip and Liquid Retina XDR display.",
             price = 799.0,
             pictureUrl = "https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/ipad-pro-finish-select-202212-12-9inch-space-gray-wifi?wid=5120&hei=2880&fmt=p-jpg&qlt=80&.v=1670862799134"
-        )
+        ),
+        Product(
+            id = "6",
+            name = "Al Murjan Chocolate",
+            description = "Al Murjan chocolate is currently trending worldwide.",
+            price = 149.0,
+            pictureUrl = "https://static.euronews.com/articles/stories/08/73/29/30/1200x675_cmsv2_e2f59f00-b4e6-544d-b2a4-52618c109b11-8732930.jpg"
+        ),
+        Product(
+            id = "7",
+            name = "Laptop Stand",
+            description = "The laptop stand helps ventilate its fan.",
+            price = 205.0,
+            pictureUrl = "https://net-eshop.com/wp-content/uploads/2023/07/71yx00O20cL._AC_UF8941000_QL80_.jpg"
+        ),
+
     )
 
     fun getAllProducts(): List<Product> {
         return productList
     }
 }
+

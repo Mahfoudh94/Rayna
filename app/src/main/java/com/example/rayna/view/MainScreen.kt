@@ -1,30 +1,25 @@
 package com.example.rayna.view
-
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Card
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.LocationOn
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.rayna.model.Product
 import com.example.rayna.viewmodel.LocationViewModel
 import com.example.rayna.viewmodel.ProductViewModel
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import com.example.rayna.model.Product
 import com.rayna.data.model.Location
 
 @Composable
@@ -33,42 +28,71 @@ fun MainScreen(
     locationViewModel: LocationViewModel,
     modifier: Modifier = Modifier
 ) {
-    val productUiState by productViewModel.productUiState.collectAsState()
-    val locationUiState by locationViewModel.locationUiState.collectAsState()
+    val navItemList = listOf(
+        NavItem(label = "Home", icon = Icons.Default.Home, route = "home"),
+        NavItem(label = "Nearby Shops", icon = Icons.Default.LocationOn, route = "shops"),
+        NavItem(label = "Profile", icon = Icons.Default.Person, route = "profile"),
+    )
 
-    Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+    var selectedIndex by remember { mutableIntStateOf(0) }
 
-
-        Text(
-            text = "Locations",
-            style = MaterialTheme.typography.headlineLarge,
-            modifier = Modifier.padding(bottom = 8.dp)
-        )
-        when {
-            locationUiState.isLoading -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    CircularProgressIndicator()
-                }
-            }
-            locationUiState.error != null -> {
-                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                    Text(text = "Error: ${locationUiState.error}", color = MaterialTheme.colorScheme.error)
-                }
-            }
-            else -> {
-                LazyColumn {
-                    items(locationUiState.locations) { location ->
-                        LocationCard(location = location)
-                        Spacer(modifier = Modifier.height(8.dp))
-                    }
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        bottomBar = {
+            NavigationBar(containerColor = Color(0xFF006400)) {
+                navItemList.forEachIndexed { index, navItem ->
+                    NavigationBarItem(
+                        selected = selectedIndex == index,
+                        onClick = { selectedIndex = index },
+                        icon = {
+                            Icon(imageVector = navItem.icon, contentDescription = navItem.label)
+                        },
+                        label = {
+                            Text(text = navItem.label)
+                        }
+                    )
                 }
             }
         }
+    ) { innerPadding ->
+        when (selectedIndex) {
+            0 -> ProductListScreen(productViewModel, modifier.padding(innerPadding))
+            1 -> ShopListScreen(locationViewModel, modifier.padding(innerPadding))
+        }
+    }
+}
 
-        Spacer(modifier = Modifier.height(16.dp))
+@Composable
+fun SearchBarWithAddButton(searchText: MutableState<String>) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        OutlinedTextField(
+            value = searchText.value,
+            onValueChange = { searchText.value = it },
+            leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
+            placeholder = { Text("Search...") },
+            modifier = Modifier.weight(1f)
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Button(onClick = {  }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF008000))) {
+            Icon(Icons.Default.Add, contentDescription = "Add")
+        }
+    }
+}
 
+@Composable
+fun ProductListScreen(productViewModel: ProductViewModel, modifier: Modifier) {
+    val productUiState by productViewModel.productUiState.collectAsState()
+    val searchText = remember { mutableStateOf("") }
+
+    Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
+        SearchBarWithAddButton(searchText)
         Text(
-            text = "Products",
+            text = "Products Top Reviews",
             style = MaterialTheme.typography.headlineLarge,
             modifier = Modifier.padding(bottom = 8.dp)
         )
@@ -84,8 +108,11 @@ fun MainScreen(
                 }
             }
             else -> {
+                val filteredProducts = productUiState.products.filter {
+                    it.name.contains(searchText.value, ignoreCase = true)
+                }
                 LazyColumn {
-                    items(productUiState.products) { product ->
+                    items(filteredProducts) { product ->
                         ProductCard(product = product)
                         Spacer(modifier = Modifier.height(8.dp))
                     }
@@ -96,8 +123,46 @@ fun MainScreen(
 }
 
 @Composable
+fun ShopListScreen(locationViewModel: LocationViewModel, modifier: Modifier) {
+    val locationUiState by locationViewModel.locationUiState.collectAsState()
+    val searchText = remember { mutableStateOf("") }
+
+    Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
+        SearchBarWithAddButton(searchText)
+        Text(
+            text = "Shops Top Reviews",
+            style = MaterialTheme.typography.headlineLarge,
+            modifier = Modifier.padding(bottom = 8.dp)
+        )
+        when {
+            locationUiState.isLoading -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator()
+                }
+            }
+            locationUiState.error != null -> {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Text(text = "Error: ${locationUiState.error}", color = MaterialTheme.colorScheme.error)
+                }
+            }
+            else -> {
+                val filteredLocations = locationUiState.locations.filter {
+                    it.name.contains(searchText.value, ignoreCase = true)
+                }
+                LazyColumn {
+                    items(filteredLocations) { location ->
+                        LocationCard(location = location)
+                        Spacer(modifier = Modifier.height(8.dp))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
 fun ProductCard(product: Product) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(modifier = Modifier.fillMaxWidth().padding(8.dp).background(Color(0xFF90EE90))) {
         Column(modifier = Modifier.padding(16.dp)) {
             AsyncImage(
                 model = product.pictureUrl,
@@ -114,10 +179,10 @@ fun ProductCard(product: Product) {
         }
     }
 }
-
+//test
 @Composable
 fun LocationCard(location: Location) {
-    Card(modifier = Modifier.fillMaxWidth()) {
+    Card(modifier = Modifier.fillMaxWidth().padding(8.dp).background(Color(0xFF90EE90))) {
         Column(modifier = Modifier.padding(16.dp)) {
             Text(text = location.name, style = MaterialTheme.typography.headlineMedium)
             Text(text = location.description, style = MaterialTheme.typography.bodyLarge)
