@@ -1,4 +1,4 @@
-package com.example.rayna.model
+package com.example.rayna.data.model
 
 import androidx.annotation.DrawableRes
 

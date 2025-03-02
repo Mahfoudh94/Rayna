@@ -1,6 +1,6 @@
 # 📱Rayna - Place & Product Review App
 
-![Kotlin Version](https://img.shields.io/badge/Kotlin-2.0.0-blue.svg)](https://kotlinlang.org)
+[![Kotlin Version](https://img.shields.io/badge/Kotlin-2.0.0-blue.svg)](https://kotlinlang.org)
 [![Compose Version](https://img.shields.io/badge/Jetpack%20Compose-1.10.0-brightgreen)](https://developer.android.com/jetpack/compose)
 
 Rayna is a social review platform where users can explore and share experiences about local businesses, stores, and products through camera scanning and community-driven reviews.

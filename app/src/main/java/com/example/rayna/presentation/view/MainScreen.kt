@@ -1,4 +1,4 @@
-package com.example.rayna.view
+package com.example.rayna.presentation.view
 
 import androidx.compose.animation.VectorConverter
 import androidx.compose.foundation.Image
@@ -35,9 +35,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
-import com.example.rayna.viewmodel.ProductViewModel
-import com.example.rayna.model.Product
-import com.example.rayna.viewmodel.LocationViewModel
+import com.example.rayna.presentation.viewmodel.ProductViewModel
+import com.example.rayna.data.model.Product
+import com.example.rayna.presentation.viewmodel.LocationViewModel
 import com.rayna.data.model.Location
 import com.example.rayna.R
 
