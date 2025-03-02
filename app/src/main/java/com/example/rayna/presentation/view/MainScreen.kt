@@ -1,37 +1,29 @@
 package com.example.rayna.presentation.view
 
-import androidx.compose.animation.VectorConverter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -52,26 +44,7 @@ fun MainScreen(
 
     Column(modifier = Modifier.fillMaxSize()) {
         SearchBar()
-     Box(
-         modifier = Modifier
-         .fillMaxWidth()
-         .padding(20.dp)
-         .clip(RoundedCornerShape(20.dp))
-         .height(190.dp)
-         .background(Color(0xFF1836F1)),
-        ){
-         Text("Select The Category and Give Us Your Review", fontSize = 10.sp, modifier = Modifier.padding(12.dp), color = Color.White)
-         LazyRow(
-             modifier = Modifier
-                 .fillMaxWidth()
-                 .padding(20.dp),
-             horizontalArrangement = Arrangement.SpaceBetween
-         ) {
-             items(locationUiState.locations) {  locatio->
-                 CategoryItem(location = locatio )
-             }
-         }
-     }
+        CategorySection(locationUiState.locations)
         TopReviews(productUiState.products)
     }
 }
@@ -79,27 +52,21 @@ fun MainScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar() {
+    var searchQuery by remember { mutableStateOf("") }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 20.dp, end = 20.dp, start = 20.dp),
+            .padding(20.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-
-        Box(
-            modifier = Modifier
-                .weight(1f)
-        ) {
+        Box(modifier = Modifier.weight(1f)) {
             TextField(
-                value = "",
-                onValueChange = {},
+                value = searchQuery,
+                onValueChange = { searchQuery = it },
                 placeholder = {
-                    Text(
-                        "Search nearly Volunteer ...",
-                        fontSize = 14.sp,
-                        color = Color.Gray,
-                    )
+                    Text("Search nearly Volunteer...", fontSize = 14.sp, color = Color.Gray)
                 },
                 leadingIcon = {
                     Icon(
@@ -112,7 +79,7 @@ fun SearchBar() {
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(55.dp)
-                    .border(1.dp, color = Color.Gray, shape = RoundedCornerShape(25.dp)),
+                    .border(1.dp, Color.Gray, RoundedCornerShape(25.dp)),
                 colors = TextFieldDefaults.textFieldColors(
                     containerColor = Color.Transparent,
                     focusedIndicatorColor = Color.Transparent,
@@ -123,42 +90,75 @@ fun SearchBar() {
 
         Spacer(modifier = Modifier.width(10.dp))
 
-        Icon(
-            imageVector = Icons.Default.Menu,
-            contentDescription = "Menu Icon",
-            tint = Color.White,
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(Color.Black)
-                .padding(8.dp)
-        )
+        IconButton(onClick = { /* Open menu */ }) {
+            Icon(
+                imageVector = Icons.Default.Menu,
+                contentDescription = "Menu Icon",
+                tint = Color.White,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Color.Black)
+                    .padding(8.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.width(10.dp))
 
-        Icon(
-            imageVector = Icons.Default.Notifications,
-            contentDescription = "Settings Icon",
-            tint = Color.White,
-            modifier = Modifier
-                .size(40.dp)
-                .clip(CircleShape)
-                .background(Color.Black)
-                .padding(8.dp)
-        )
+        IconButton(onClick = { /* Handle notifications */ }) {
+            Icon(
+                imageVector = Icons.Default.Notifications,
+                contentDescription = "Notifications Icon",
+                tint = Color.White,
+                modifier = Modifier
+                    .size(40.dp)
+                    .clip(CircleShape)
+                    .background(Color.Black)
+                    .padding(8.dp)
+            )
+        }
     }
 }
 
+@Composable
+fun CategorySection(locations: List<Location>) {
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .height(190.dp)
+            .background(Color(0xFF1836F1))
+    ) {
+        Column {
+            Text(
+                "Select The Category and Give Us Your Review",
+                fontSize = 10.sp,
+                modifier = Modifier.padding(12.dp),
+                color = Color.White
+            )
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                items(locations) { location ->
+                    CategoryItem(location)
+                }
+            }
+        }
+    }
+}
 
 @Composable
 fun CategoryItem(location: Location) {
     Card(
         modifier = Modifier
-            .padding( top = 30.dp)
+            .padding(top = 30.dp)
             .width(80.dp)
             .height(150.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
@@ -167,35 +167,40 @@ fun CategoryItem(location: Location) {
         ) {
             Image(
                 painter = painterResource(id = location.pictureUrl),
-                contentDescription = "Custom Icon",
+                contentDescription = "Category Icon",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(90.dp)
-                    .clip(RoundedCornerShape(20.dp))    )
-
+                    .clip(RoundedCornerShape(20.dp))
+            )
             Text(
                 text = location.name,
                 style = MaterialTheme.typography.titleMedium,
                 color = Color.White,
-                modifier = Modifier
-                    .padding(top = 4.dp)
-                    .align(Alignment.CenterHorizontally) // توسيط النص
+                modifier = Modifier.padding(top = 4.dp).align(Alignment.CenterHorizontally)
             )
         }
     }
 }
 
-
 @Composable
 fun TopReviews(products: List<Product>) {
-    Column(modifier = Modifier.padding(end = 10.dp, start = 10.dp)
-        .clip(RoundedCornerShape(20.dp))
-        .background(Color(0xFFE5EFF1)
-    )
+    Column(
+        modifier = Modifier
+            .padding(10.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(Color(0xFFE5EFF1))
     ) {
-        Text("Top Reviews", modifier = Modifier.padding(12.dp), style = MaterialTheme.typography.headlineMedium)
+        Text(
+            "Top Reviews",
+            modifier = Modifier.padding(12.dp),
+            style = MaterialTheme.typography.headlineMedium
+        )
         Spacer(modifier = Modifier.height(5.dp))
-        LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier.fillMaxSize().padding(bottom = 75.dp)) {
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
+            modifier = Modifier.fillMaxSize().padding(bottom = 75.dp)
+        ) {
             items(products) { product ->
                 ProductReviewCard(product)
                 Spacer(modifier = Modifier.height(3.dp))
@@ -206,26 +211,29 @@ fun TopReviews(products: List<Product>) {
 
 @Composable
 fun ProductReviewCard(product: Product) {
-    Card(modifier = Modifier.fillMaxWidth().padding(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        ) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+    ) {
         Column(modifier = Modifier.padding(0.dp)) {
-            Image(
-                painter = painterResource(id = product.pictureUrl),
+            AsyncImage(
+                model = product.pictureUrl,
                 contentDescription = product.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(150.dp)
-                    .clip(RoundedCornerShape(5.dp)) )
+                    .clip(RoundedCornerShape(5.dp))
+            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(text = product.name, style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(5.dp))
-            Row (
+            Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
-
-            ){
+            ) {
                 Text(text = product.cat, style = MaterialTheme.typography.bodyLarge)
                 Text(text = "⭐ ${product.rating}", color = Color(0xFFFFA000))
             }

@@ -1,14 +1,16 @@
 package com.example.rayna.presentation.viewmodel
 
 import androidx.lifecycle.ViewModel
-import com.example.rayna.domain.usecase.AddProductUseCase
-import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import com.example.rayna.data.model.Product
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+//import com.example.rayna.model.Product
 
+class AddProductViewModel : ViewModel() {
+    private val _products = MutableStateFlow<List<Product>>(emptyList())
+    val products: StateFlow<List<Product>> = _products
 
-@HiltViewModel
-class AddProductViewModel @Inject constructor(private val addProductUseCase: AddProductUseCase): ViewModel() {
-
-    //TODO: Add ViewModel logic
-
+    fun addProduct(product: Product) {
+        _products.value = _products.value + product
+    }
 }
