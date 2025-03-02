@@ -127,4 +127,4 @@ The Add Product screen should follow Rayna's design language:
 - Use consistent typography and spacing
 - Include product preview section for image/rating
 
-Good luck implementing the Add Product feature with Dagger Hilt!
+Good luck implementing the Add Product feature with Dagger Hilt!!
