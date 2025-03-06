@@ -16,6 +16,7 @@ import com.example.rayna.ui.theme.RaynaTheme
 import dagger.hilt.android.AndroidEntryPoint
 
 
+
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
