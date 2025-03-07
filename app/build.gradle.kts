@@ -45,7 +45,7 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.ktx)
     // ViewModel Kotlin extensions for easier ViewModel usage.
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    // Compose integration for ViewModel to use ViewModel in composable functions
+    // Compose integration for ViewModel to use ViewModel in composable functions.
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     // Compose integration with Activity for setting up Compose UI in Activities.
     implementation(libs.androidx.activity.compose)
