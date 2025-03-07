@@ -1,6 +1,7 @@
 package com.example.rayna
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -11,11 +12,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -36,6 +39,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -58,21 +62,13 @@ class MainActivity : ComponentActivity() {
                         modifier = Modifier.fillMaxSize(),
                         color = MaterialTheme.colorScheme.background
                     ) {
-
                         Greeting()
                     }
                 }
             }
-
         }
     }
 }
-
-
-
-
-
-
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,23 +81,14 @@ fun Greeting() {
     val locationViewModel = viewModel<LocationViewModel>()
 
 
-
     Scaffold(
-
-
-
-
-
-
         content = {
-
-
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center) {
                 when (buttomState) {
                     "Home" -> MainScreen(
                         productViewModel,
                         locationViewModel,
-
                     )
                     "Account" -> Text(text = "Account", fontSize = 25.sp, fontWeight = FontWeight.Bold)
                     "Map" -> Text(text = "Map", fontSize = 25.sp, fontWeight = FontWeight.Bold)
@@ -116,76 +103,82 @@ fun Greeting() {
             Surface(
                 modifier = Modifier
                     .shadow(8.dp, RoundedCornerShape(0.dp))
-                   .clip(RoundedCornerShape(topStart =20 .dp, topEnd = 20.dp))
-                ,
+                    .clip(RoundedCornerShape(topStart = 20.dp, topEnd = 20.dp)),
                 color = Color.Gray
-            ){
-                NavigationBar (
-                    containerColor = Color(0xFF0F5FF6),
-
-                    ){
-
+            ) {
+                NavigationBar(
+                    containerColor = Color(0xFF4CAF50)
+                ) {
                     NavigationBarItem(
                         selected = buttomState == "Home",
                         onClick = { buttomState = "Home" },
-                        label = { Text(text = "Home", color = Color.White)  },
-                        icon = { Icon(imageVector = Icons.Default.Home , contentDescription = null , tint = if (buttomState == "Home") Color.Black else Color.White,) }
-
+                        label = { Text(text = "Home", color = Color.White) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.Home,
+                                contentDescription = null,
+                                tint = if (buttomState == "Home") Color.Black else Color.White
+                            )
+                        }
                     )
                     NavigationBarItem(
                         selected = buttomState == "Map",
-                        onClick = { buttomState = "Map"  },
-                        label = { Text(text = "Map",color = Color.White) },
-                        icon = { Icon(imageVector = Icons.Default.LocationOn , contentDescription = null,  tint = if (buttomState == "Map") Color.Black else Color.White,) }
-
+                        onClick = { buttomState = "Map" },
+                        label = { Text(text = "Map", color = Color.White) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.LocationOn,
+                                contentDescription = null,
+                                tint = if (buttomState == "Map") Color.Black else Color.White
+                            )
+                        }
                     )
                     NavigationBarItem(
                         selected = buttomState == "Search",
                         onClick = { },
-                        icon = {     Box(
-                            modifier = Modifier
-                                .size(70.dp)
-                                .clip(CircleShape)
-                                .background(Color.White) ,
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.c),
-                                contentDescription = "Custom Icon",
-                                modifier = Modifier.size(50.dp)
-                            )
-                        }}
-
-
+                        icon = {
+                            Box(
+                                modifier = Modifier
+                                    .size(70.dp)
+                                    .clip(CircleShape)
+                                    .background(Color.White),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.c),
+                                    contentDescription = "Custom Icon",
+                                    modifier = Modifier.size(50.dp)
+                                )
+                            }
+                        }
                     )
                     NavigationBarItem(
                         selected = buttomState == "Community",
-                        onClick = {  buttomState = "Community" },
-                        label = { Text(text = "Community", maxLines = 1,color = Color.White) },
+                        onClick = { buttomState = "Community" },
+                        label = { Text(text = "Community", maxLines = 1, color = Color.White) },
                         icon = {
                             Image(
                                 painter = painterResource(id = R.drawable.a),
                                 contentDescription = "Custom Icon",
-                                modifier = Modifier.size(30.dp),
-                                colorFilter = ColorFilter.tint(if (buttomState == "Community") Color.Black else Color.White,)
+                                modifier = Modifier.size(25.dp),
+                                colorFilter = ColorFilter.tint(if (buttomState == "Community") Color.Black else Color.White)
                             )
                         }
-
                     )
                     NavigationBarItem(
                         selected = buttomState == "Account",
-                        onClick = {buttomState = "Account"   },
-                        label = { Text(text = "Account",color = Color.White) },
-                        icon = { Icon(imageVector = Icons.Default.AccountCircle , contentDescription = null, tint  = if (buttomState == "Account") Color.Black else Color.White,) }
-
+                        onClick = { buttomState = "Account" },
+                        label = { Text(text = "Account", color = Color.White) },
+                        icon = {
+                            Icon(
+                                imageVector = Icons.Default.AccountCircle,
+                                contentDescription = null,
+                                tint = if (buttomState == "Account") Color.Black else Color.White
+                            )
+                        }
                     )
-
-
                 }
             }
-
-
-        }
+        },
     )
-
 }
