@@ -42,13 +42,14 @@ private val DarkColorScheme = darkColorScheme(
 
 @Composable
 fun RaynaTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    dynamicColor: Boolean = true,
+    darkTheme: Boolean = isSystemInDarkTheme(), // Uses system setting
     content: @Composable () -> Unit
 ) {
-
-    // Choose color scheme based on theme mode
-    val colors = if (darkTheme) DarkColorScheme else LightColorScheme
+    val colors = if (darkTheme) {
+        darkColorScheme()
+    } else {
+        lightColorScheme()
+    }
 
     MaterialTheme(
         colorScheme = colors,
