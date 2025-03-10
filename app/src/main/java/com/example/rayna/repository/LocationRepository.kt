@@ -1,13 +1,12 @@
 package com.example.rayna.repository
 
 import com.rayna.data.model.Location
-
 object LocationRepository {
     fun getLocations(): List<Location> {
         return listOf(
-            Location(id = "1", name = "Paris", description = "City of Lights", address = "Paris, France", coordinates = Pair(48.8566, 2.3522), type = "City"),
-            Location(id = "2", name = "London", description = "Capital of England", address = "London, UK", coordinates = Pair(51.5074, -0.1278), type = "City"),
-            Location(id = "3", name = "New York", description = "The Big Apple", address = "New York, USA", coordinates = Pair(40.7128, -74.0060), type = "City")
+            Location(id = "1", name = "Alger", description = "Best store in Algiers", address = "Algiers, Algeria", coordinates = Pair(39.7538, 3.0588), type = "Shop"),
+            Location(id = "2", name = "Oran Market", description = "Famous marketplace in Oran", address = "Oran, Algeria", coordinates = Pair(35.6977, -0.6331), type = "Market"),
+            Location(id = "3", name = "Constantine Mall", description = "A great shopping mall in Constantine", address = "Constantine, Algeria", coordinates = Pair(36.3650, 6.6147), type = "Mall")
         )
     }
 }
