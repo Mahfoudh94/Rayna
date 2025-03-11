@@ -36,9 +36,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import com.example.rayna.R
 import com.example.rayna.presentation.viewmodel.LocationViewModel
 import com.example.rayna.presentation.viewmodel.ProductViewModel
+import com.example.testrayna.nav.IconData
+import com.example.testrayna.nav.Nav
+import com.example.testrayna.nav.Screen
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -50,26 +55,12 @@ fun MainLayout() {
     }
     val productViewModel = hiltViewModel<ProductViewModel>()
     val locationViewModel = hiltViewModel<LocationViewModel>()
+    val  navController = rememberNavController()
 
+    val  items = listOf(Screen.Home,Screen.Setting ,Screen.scan,Screen.Search,Screen.Account,)
 
 
     Scaffold(
-        content = {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                when (buttomState) {
-                    "Home" -> MainScreen(
-                        productViewModel,
-                        locationViewModel,
-
-                        )
-                    "Account" -> Text(text = "Account", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-                    "Map" -> Text(text = "Map", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-                    "Search" -> Text(text = "Search", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-                    "Community" -> Text(text = "Community", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-                    else -> Text(text = "Unknown", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-                }
-            }
-        },
 
         bottomBar = {
             Surface(
@@ -83,69 +74,91 @@ fun MainLayout() {
                     containerColor = Color(0xFF0F5FF6),
 
                     ){
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val currentRoute = navBackStackEntry?.destination?.route
+                    items.forEach { screen ->
+                        if (screen == Screen.scan) {
 
-                    NavigationBarItem(
-                        selected = buttomState == "Home",
-                        onClick = { buttomState = "Home" },
-                        label = { Text(text = "Home", color = Color.White)  },
-                        icon = { Icon(imageVector = Icons.Default.Home , contentDescription = null , tint = if (buttomState == "Home") Color.Black else Color.White,) }
+                            NavigationBarItem(
+                                selected = (currentRoute == screen.route),
+                                onClick = {
+                                    navController.navigate(screen.route) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                icon = {
+                                    Box(
+                                        modifier = Modifier
+                                            .size(70.dp)
+                                            .clip(CircleShape)
+                                            .background(Color.White),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.c),
+                                            contentDescription = screen.title,
+                                            modifier = Modifier.size(50.dp)
+                                        )
+                                    }
+                                },
+                                alwaysShowLabel = true
 
-                    )
-                    NavigationBarItem(
-                        selected = buttomState == "Map",
-                        onClick = { buttomState = "Map"  },
-                        label = { Text(text = "Map",color = Color.White) },
-                        icon = { Icon(imageVector = Icons.Default.LocationOn , contentDescription = null,  tint = if (buttomState == "Map") Color.Black else Color.White,) }
+                                                            )
+                        } else {
 
-                    )
-                    NavigationBarItem(
-                        selected = buttomState == "Search",
-                        onClick = { },
-                        icon = {     Box(
-                            modifier = Modifier
-                                .size(70.dp)
-                                .clip(CircleShape)
-                                .background(Color.White) ,
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.c),
-                                contentDescription = "Custom Icon",
-                                modifier = Modifier.size(50.dp)
+                            NavigationBarItem(
+                                selected = (currentRoute == screen.route),
+                                onClick = {
+                                    navController.navigate(screen.route) {
+                                        popUpTo(navController.graph.startDestinationId) {
+                                            saveState = true
+                                        }
+                                        launchSingleTop = true
+                                        restoreState = true
+                                    }
+                                },
+                                icon = {
+                                    val iconTint = if (currentRoute == screen.route) Color.Black else Color.White
+                                    when (screen.icon) {
+                                        is IconData.VectorIcon -> {
+                                            Icon(
+                                                imageVector = screen.icon.imageVector,
+                                                contentDescription = screen.title,
+                                                modifier = Modifier.size(30.dp),
+                                                tint = iconTint,
+                                            )
+                                        }
+                                        is IconData.PainterIcon -> {
+                                            Icon(
+                                                painter = painterResource(id = screen.icon.resId),
+                                                contentDescription = screen.title,
+                                                modifier = Modifier.size(30.dp),
+                                                tint = iconTint,
+                                            )
+                                        }
+                                    }
+                                },
+                                label = { Text(text = screen.title, color = Color.White) },
+                                alwaysShowLabel = true
                             )
                         }
-                        }
-
-
-                    )
-                    NavigationBarItem(
-                        selected = buttomState == "Community",
-                        onClick = {  buttomState = "Community" },
-                        label = { Text(text = "Community", maxLines = 1,color = Color.White) },
-                        icon = {
-                            Image(
-                                painter = painterResource(id = R.drawable.a),
-                                contentDescription = "Custom Icon",
-                                modifier = Modifier.size(30.dp),
-                                colorFilter = ColorFilter.tint(if (buttomState == "Community") Color.Black else Color.White,)
-                            )
-                        }
-
-                    )
-                    NavigationBarItem(
-                        selected = buttomState == "Account",
-                        onClick = {buttomState = "Account"   },
-                        label = { Text(text = "Account",color = Color.White) },
-                        icon = { Icon(imageVector = Icons.Default.AccountCircle , contentDescription = null, tint  = if (buttomState == "Account") Color.Black else Color.White,) }
-
-                    )
-
-
+                    }
+                    }
                 }
-            }
-
 
         }
-    )
+
+
+
+    ){
+        Nav( navController = navController)
+    }
 
 }
+
+
+

@@ -4,8 +4,9 @@ import com.example.rayna.R
 import com.example.rayna.data.model.Product
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
+import javax.inject.Inject
 
-class ProductRepositoryImpl : ProductRepository {
+class ProductRepositoryImpl @Inject constructor() : ProductRepository {
 
     private val _productList = mutableListOf(
         Product(
@@ -15,7 +16,7 @@ class ProductRepositoryImpl : ProductRepository {
             description = "The latest iPhone with A17 Pro chip, titanium design, and 48MP camera.",
             price = 999.0,
             rating = 3.5,
-            pictureUrl = R.drawable.pro
+            pictureUrl =""
         ),
         Product(
             id = "2",
@@ -24,7 +25,7 @@ class ProductRepositoryImpl : ProductRepository {
             description = "Ultra-thin and lightweight laptop with M2 chip and Retina display.",
             price = 1199.0,
             rating = 3.5,
-            pictureUrl = R.drawable.pr
+            pictureUrl = ""
         ),
         Product(
             id = "3",
@@ -33,7 +34,7 @@ class ProductRepositoryImpl : ProductRepository {
             description = "Rugged and capable smartwatch for extreme adventures.",
             price = 799.0,
             rating = 3.5,
-            pictureUrl = R.drawable.pro
+            pictureUrl = ""
         ),
         Product(
             id = "4",
@@ -42,7 +43,7 @@ class ProductRepositoryImpl : ProductRepository {
             description = "Active Noise Cancellation and Adaptive Transparency for immersive sound.",
             price = 249.0,
             rating = 3.5,
-            pictureUrl = R.drawable.p
+            pictureUrl = ""
         ),
         Product(
             id = "5",
@@ -51,7 +52,7 @@ class ProductRepositoryImpl : ProductRepository {
             description = "The ultimate iPad experience with M2 chip and Liquid Retina XDR display.",
             price = 799.0,
             rating = 3.5,
-            pictureUrl = R.drawable.s
+            pictureUrl = ""
         )
     )
 

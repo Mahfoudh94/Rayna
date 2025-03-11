@@ -211,7 +211,7 @@ fun ProductReviewCard(product: Product) {
         ) {
         Column(modifier = Modifier.padding(0.dp)) {
             Image(
-                painter = painterResource(id = product.pictureUrl),
+                painter = painterResource(id = R.drawable.p),
                 contentDescription = product.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
