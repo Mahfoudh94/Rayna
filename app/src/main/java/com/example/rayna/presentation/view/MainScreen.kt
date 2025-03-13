@@ -210,8 +210,8 @@ fun ProductReviewCard(product: Product) {
             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
         ) {
         Column(modifier = Modifier.padding(0.dp)) {
-            Image(
-                painter = painterResource(id = R.drawable.p),
+            AsyncImage(
+                model = product.pictureUrl,
                 contentDescription = product.name,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier

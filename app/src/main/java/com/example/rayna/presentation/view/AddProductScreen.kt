@@ -3,21 +3,29 @@ package com.example.rayna.presentation.view
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.example.rayna.presentation.addproduct.AddProductEvent
 import com.example.rayna.presentation.viewmodel.AddProductViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -29,14 +37,6 @@ fun AddProductScreen(
 ) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
-
-    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
-    val imagePickerLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        selectedImageUri = uri
-        uri?.let { viewModel.onEvent(AddProductEvent.ImageUriChanged(it.toString())) }
-    }
 
     LaunchedEffect(Unit) {
         viewModel.uiEvent.collectLatest { event ->
@@ -61,10 +61,12 @@ fun AddProductScreen(
             }
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
+                    .fillMaxWidth()
                     .padding(16.dp)
                     .padding(paddingValues),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+               
             ) {
 
                 state.error?.let { error ->
@@ -74,7 +76,7 @@ fun AddProductScreen(
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
-
+                PickImage(viewModel)
                 OutlinedTextField(
                     value = state.name,
                     onValueChange = { viewModel.onEvent(AddProductEvent.NameChanged(it)) },
@@ -124,32 +126,7 @@ fun AddProductScreen(
                     shape = RoundedCornerShape(14.dp),
                     singleLine = true
                 )
-                OutlinedTextField(
-                    value = if (state.imageUri.isNotBlank()) state.imageUri else "اختر صورة من الجهاز",
-                    onValueChange = { /* حقل للقراءة فقط */ },
-                    label = { Text("رابط الصورة") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable { imagePickerLauncher.launch("image/*") },
-                    enabled = false,
-                    shape = RoundedCornerShape(14.dp),
-                    singleLine = true
-                )
-                selectedImageUri?.let { uri ->
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .padding(top = 8.dp)
-                            .border(width = 2.dp, color = Color.Gray, shape = RoundedCornerShape(8.dp))
-                    ) {
-                        AsyncImage(
-                            model = uri,
-                            contentDescription = "صورة المنتج",
-                            modifier = Modifier.fillMaxSize()
-                        )
-                    }
-                }
+
                 Button(
                     onClick = { viewModel.onEvent(AddProductEvent.Submit) },
                     modifier = Modifier
@@ -162,6 +139,36 @@ fun AddProductScreen(
                     Text("إضافة المنتج")
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun PickImage(viewModel: AddProductViewModel) {
+    val imageUri = remember { mutableStateOf<Uri?>(null) }
+
+    val pickImageLauncher = rememberLauncherForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        imageUri.value = uri
+        uri?.let { viewModel.onEvent(AddProductEvent.ImageUriChanged(it.toString())) }
+    }
+
+    Box(
+        modifier = Modifier
+            .size(170.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .border(BorderStroke(2.dp, Color.Gray), shape = RoundedCornerShape(20.dp))
+            .clickable { pickImageLauncher.launch("image/*") },
+        contentAlignment = Alignment.Center
+    ) {
+        imageUri.value?.let { uri ->
+            Image(
+                painter = rememberAsyncImagePainter(uri),
+                contentDescription = "Selected Image",
+                modifier = Modifier.fillMaxSize(), contentScale = ContentScale.FillHeight
+            )
+        } ?: Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Icon(Icons.Outlined.Add, contentDescription = "Add Image", tint = Color.Gray)
+            Text("اضافة صورة", fontSize = 16.sp, color = Color.Gray)
         }
     }
 }
