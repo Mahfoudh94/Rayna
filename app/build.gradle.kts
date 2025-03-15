@@ -41,6 +41,9 @@ android {
 
 dependencies {
 
+
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     // ViewModel Kotlin extensions for easier ViewModel usage
