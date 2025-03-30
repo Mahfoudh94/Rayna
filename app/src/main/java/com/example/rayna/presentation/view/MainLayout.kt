@@ -10,8 +10,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
@@ -35,10 +35,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.rayna.R
 import com.example.rayna.presentation.viewmodel.LocationViewModel
 import com.example.rayna.presentation.viewmodel.ProductViewModel
+import com.example.raynaapp.ui.screens.AddProductScreen
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -63,7 +63,7 @@ fun MainLayout() {
 
                         )
                     "Account" -> Text(text = "Account", fontSize = 25.sp, fontWeight = FontWeight.Bold)
-                    "Map" -> Text(text = "Map", fontSize = 25.sp, fontWeight = FontWeight.Bold)
+                    "Add" -> AddProductScreen()
                     "Search" -> Text(text = "Search", fontSize = 25.sp, fontWeight = FontWeight.Bold)
                     "Community" -> Text(text = "Community", fontSize = 25.sp, fontWeight = FontWeight.Bold)
                     else -> Text(text = "Unknown", fontSize = 25.sp, fontWeight = FontWeight.Bold)
@@ -92,10 +92,10 @@ fun MainLayout() {
 
                     )
                     NavigationBarItem(
-                        selected = buttomState == "Map",
-                        onClick = { buttomState = "Map"  },
-                        label = { Text(text = "Map",color = Color.White) },
-                        icon = { Icon(imageVector = Icons.Default.LocationOn , contentDescription = null,  tint = if (buttomState == "Map") Color.Black else Color.White,) }
+                        selected = buttomState == "Add",
+                        onClick = { buttomState = "Add"  },
+                        label = { Text(text = "Add",color = Color.White) },
+                        icon = { Icon(imageVector = Icons.Default.Add , contentDescription = null,  tint = if (buttomState == "Add") Color.Black else Color.White,) }
 
                     )
                     NavigationBarItem(
