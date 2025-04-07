@@ -1,24 +1,38 @@
 package com.example.rayna.presentation.view
 
-import androidx.compose.animation.VectorConverter
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -26,52 +40,45 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil.compose.AsyncImage
-import com.example.rayna.presentation.viewmodel.ProductViewModel
 import com.example.rayna.data.model.Product
 import com.example.rayna.presentation.viewmodel.LocationViewModel
+import com.example.rayna.presentation.viewmodel.ProductViewModel
 import com.rayna.data.model.Location
-import com.example.rayna.R
 
 @Composable
 fun MainScreen(
     productViewModel: ProductViewModel,
-    locationViewModel: LocationViewModel,
-    modifier: Modifier = Modifier
+    locationViewModel: LocationViewModel
 ) {
     val productUiState by productViewModel.productUiState.collectAsState()
     val locationUiState by locationViewModel.locationUiState.collectAsState()
 
     Column(modifier = Modifier.fillMaxSize()) {
         SearchBar()
-     Box(
-         modifier = Modifier
-         .fillMaxWidth()
-         .padding(20.dp)
-         .clip(RoundedCornerShape(20.dp))
-         .height(190.dp)
-         .background(Color(0xFF1836F1)),
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(20.dp)
+                .clip(RoundedCornerShape(20.dp))
+                .height(190.dp)
+                .background(Color(0xFF1836F1)),
         ){
-         Text("Select The Category and Give Us Your Review", fontSize = 10.sp, modifier = Modifier.padding(12.dp), color = Color.White)
-         LazyRow(
-             modifier = Modifier
-                 .fillMaxWidth()
-                 .padding(20.dp),
-             horizontalArrangement = Arrangement.SpaceBetween
-         ) {
-             items(locationUiState.locations) {  locatio->
-                 CategoryItem(location = locatio )
-             }
-         }
-     }
+            Text("Select The Category and Give Us Your Review", fontSize = 10.sp, modifier = Modifier.padding(12.dp), color = Color.White)
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                items(locationUiState.locations) {  locatio->
+                    CategoryItem(location = locatio )
+                }
+            }
+        }
         TopReviews(productUiState.products)
     }
 }
@@ -159,7 +166,7 @@ fun CategoryItem(location: Location) {
             .height(150.dp),
         colors = CardDefaults.cardColors(containerColor = Color.Transparent),
 
-    ) {
+        ) {
         Column(
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.Center,
@@ -191,7 +198,7 @@ fun TopReviews(products: List<Product>) {
     Column(modifier = Modifier.padding(end = 10.dp, start = 10.dp)
         .clip(RoundedCornerShape(20.dp))
         .background(Color(0xFFE5EFF1)
-    )
+        )
     ) {
         Text("Top Reviews", modifier = Modifier.padding(12.dp), style = MaterialTheme.typography.headlineMedium)
         Spacer(modifier = Modifier.height(5.dp))
@@ -207,8 +214,8 @@ fun TopReviews(products: List<Product>) {
 @Composable
 fun ProductReviewCard(product: Product) {
     Card(modifier = Modifier.fillMaxWidth().padding(8.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-        ) {
+        colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+    ) {
         Column(modifier = Modifier.padding(0.dp)) {
             Image(
                 painter = painterResource(id = product.pictureUrl),
