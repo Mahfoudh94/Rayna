@@ -55,7 +55,7 @@ In this part, you will implement the remaining CRUD operations, search functiona
    - Create review data model
    - Design review UI components
    - Implement review submission and display
-4. Polish User Experience
+4. User Experience
    - Add loading indicators
    - Implement error handling with user-friendly messages
    - Add animations for smooth transitions
