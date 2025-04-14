@@ -57,7 +57,7 @@ fun MainLayout() {
     val locationViewModel = hiltViewModel<LocationViewModel>()
     val  navController = rememberNavController()
 
-    val  items = listOf(Screen.Home,Screen.Setting ,Screen.scan,Screen.Search,Screen.Account,)
+    val  items = listOf(Screen.Home,Screen.Add ,Screen.scan,Screen.Search,Screen.Account,)
 
 
     Scaffold(

@@ -37,7 +37,7 @@ fun Nav(navController: NavHostController) {
         composable(Screen.Search.route){
            Setting()
         }
-        composable(Screen.Setting.route){
+        composable(Screen.Add.route){
             AddProductScreen()
         }
     }

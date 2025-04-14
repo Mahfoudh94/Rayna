@@ -4,6 +4,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -21,10 +22,10 @@ sealed class Screen(val route: String, val title: String, val icon: IconData) {
         title = "Home",
         icon = IconData.VectorIcon(Icons.Default.Home)
     )
-    object Setting : Screen(
-        route = "Map",
-        title = "Map",
-        icon = IconData.VectorIcon(Icons.Default.Place)
+    object Add : Screen(
+        route = "Add",
+        title = "Add",
+        icon = IconData.VectorIcon(Icons.Default.Add)
     )
     object scan : Screen(
         route = "AddProduct",
