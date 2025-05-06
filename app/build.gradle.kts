@@ -2,6 +2,11 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.dagger.hilt.plugin)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.serialization)
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -40,23 +45,32 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    // ViewModel Kotlin extensions for easier ViewModel usage
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    // Compose integration for ViewModel to use ViewModel in composable functions
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    // Compose integration with Activity for setting up Compose UI in Activities
     implementation(libs.androidx.activity.compose)
-    // Coil image loading library for Compose to load and display images efficiently
     implementation(libs.io.coil.kt.compose)
+
+    // Dagger Hilt
+    implementation(libs.dagger.hilt)
+    kapt(libs.dagger.hilt.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+
+    // Navigation compose
+    implementation(libs.androidx.navigation.compose)
+
+    // ✅ Firebase dependencies
+    implementation(platform(libs.google.firebase.bom)) // BOM للتحكم بالإصدارات
+    implementation(libs.google.firebase.analytics.ktx)
+    implementation(libs.google.firebase.auth.ktx)
+    implementation(libs.google.firebase.firestore.ktx)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation ("androidx.compose.material:material-icons-extended:1.6.0")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

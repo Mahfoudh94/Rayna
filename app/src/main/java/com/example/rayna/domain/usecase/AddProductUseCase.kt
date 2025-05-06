@@ -1,0 +1,13 @@
+package com.example.rayna.domain.usecase
+
+import com.example.rayna.data.model.Product
+import com.example.rayna.data.repository.ProductRepository
+import javax.inject.Inject
+
+class AddProductUseCase @Inject constructor(
+    private val repository: ProductRepository
+) {
+    suspend operator fun invoke(product: Product) {
+        repository.addProduct(product)
+    }
+}
