@@ -106,3 +106,4 @@ class AddProductViewModel @Inject constructor(
         data class Success(val message: String) : UiEvent()
     }
 }
+//app mobile
