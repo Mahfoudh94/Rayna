@@ -5,7 +5,8 @@ plugins {
     alias(libs.plugins.dagger.hilt.plugin)
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.serialization)
-    //alias(libs.plugins.google.services)
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -44,33 +45,26 @@ android {
 }
 
 dependencies {
-
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-    // ViewModel Kotlin extensions for easier ViewModel usage
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    // Compose integration for ViewModel to use ViewModel in composable functions
     implementation(libs.androidx.lifecycle.viewmodel.compose)
-    // Compose integration with Activity for setting up Compose UI in Activities
     implementation(libs.androidx.activity.compose)
-    // Coil image loading library for Compose to load and display images efficiently
     implementation(libs.io.coil.kt.compose)
 
-    //Dagger Hilt
+    // Dagger Hilt
     implementation(libs.dagger.hilt)
     kapt(libs.dagger.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
-    //Navigation compose
+    // Navigation compose
     implementation(libs.androidx.navigation.compose)
 
-
-    //firebase
-
-//    implementation(platform(libs.google.firebase.bom))
-//    implementation(libs.google.firebase.analytics.ktx)
-//    implementation(libs.google.firebase.auth.ktx)
-//    implementation(libs.google.firebase.firestore.ktx)
+    // ✅ Firebase dependencies
+    implementation(platform(libs.google.firebase.bom)) // BOM للتحكم بالإصدارات
+    implementation(libs.google.firebase.analytics.ktx)
+    implementation(libs.google.firebase.auth.ktx)
+    implementation(libs.google.firebase.firestore.ktx)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)

@@ -4,10 +4,10 @@ import com.example.rayna.data.model.Product
 import com.example.rayna.data.repository.ProductRepository
 import javax.inject.Inject
 
-
-class AddProductUseCase @Inject constructor(private val productRepository: ProductRepository) {
-
+class AddProductUseCase @Inject constructor(
+    private val repository: ProductRepository
+) {
     suspend operator fun invoke(product: Product) {
-        productRepository.addProduct(product)
+        repository.addProduct(product)
     }
 }

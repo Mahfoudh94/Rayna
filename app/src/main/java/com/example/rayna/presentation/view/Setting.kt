@@ -26,9 +26,7 @@ fun  Setting(){
     ){
         Text(text = "Setting", fontSize = 30.sp )
         Spacer(modifier = Modifier.size(30.dp))
-//        Button(onClick = {}) {
-//            Text(text = "Go to ")
-//        }
+
     }
 }
 

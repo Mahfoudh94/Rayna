@@ -5,7 +5,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -24,16 +23,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import com.example.rayna.presentation.addproduct.AddProductEvent
 import com.example.rayna.presentation.viewmodel.AddProductViewModel
+import com.example.rayna.presentation.viewmodel.ProductViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun AddProductScreen(
     viewModel: AddProductViewModel = hiltViewModel(),
-    onProductAdded: () -> Unit = {}
+    onProductAdded: () -> Unit = {},
+    productViewModel: ProductViewModel
 ) {
     val state by viewModel.state.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }

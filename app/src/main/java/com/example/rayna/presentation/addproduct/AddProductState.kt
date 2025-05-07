@@ -17,7 +17,7 @@ data class AddProductState(
     val price: Double = 0.0,
     val imageUri: String = "",
     val rating: Double = 0.0,
-    val error: String? = null,        // لعرض أي خطأ يحصل
-    val isLoading: Boolean = false,   // لعرض مؤشر التحميل
-    val isSuccess: Boolean = false    // لمعرفة إن تمت العملية بنجاح
+    val error: String? = null,
+    val isLoading: Boolean = false,
+    val isSuccess: Boolean = false
 )
