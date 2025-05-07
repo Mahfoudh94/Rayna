@@ -13,3 +13,4 @@ data class Product(
     val pictureUrl: String = "",
     val rating: Double = 0.0
 )
+//last task of app mobile__

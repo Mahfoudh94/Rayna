@@ -23,6 +23,6 @@ object DomainModule {
     @Singleton
     fun provideAddProductUseCase(productRepository: ProductRepository): AddProductUseCase {
         return AddProductUseCase(productRepository)
-    }
+    }//last task of app mobile__
 }
 

@@ -172,3 +172,4 @@ fun PickImage(viewModel: AddProductViewModel) {
         }
     }
 }
+//last task of app mobile__
